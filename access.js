@@ -33,7 +33,7 @@
       return '<script>' + scriptText(code) + '</script>';
     });
     html = html.replace('</head>', '<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"></head>');
-    html = html.replace('</body>', '<button id="pcLogout" style="position:fixed;right:18px;bottom:18px;z-index:9999;padding:9px 15px;background:#fff;border:1px solid #ccd2c3;border-radius:8px;color:#444;cursor:pointer" onclick="window.pcLogout()">退出登录</button></body>');
+    html = html.replace(/<\/body>\s*<\/html>\s*$/i, '<button id="pcLogout" style="position:fixed;right:18px;bottom:18px;z-index:9999;padding:9px 15px;background:#fff;border:1px solid #ccd2c3;border-radius:8px;color:#444;cursor:pointer" onclick="window.pcLogout()">退出登录</button></body></html>');
     document.open(); document.write(html); document.close();
   }
   window.pcLogout = () => { key = null; files = null; location.replace(base.href); };
