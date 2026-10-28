@@ -25,7 +25,11 @@
     for (const id of intervals) clearInterval(id);
     intervals.clear();
     let html = files['index.html'];
-    html = html.replace(/<link rel="stylesheet"[^>]*>/, () => '<style>' + files['style.css'] + '</style>');
+    html = html.replace(/<link rel="stylesheet" href="([^"]+)"[^>]*>/g, (_, source) => {
+      const name=source.split('?')[0];
+      if(!(name in files))throw new Error('asset');
+      return '<style>'+files[name]+'</style>';
+    });
     html = html.replace(/<script src="([^"]+)"[^>]*><\/script>/g, (_, source) => {
       const name = source.split('?')[0];
       if (!(name in files)) throw new Error('asset');
@@ -41,7 +45,7 @@
     if (refreshing) return;
     refreshing = true;
     try { files = await decrypt(await envelope('app.enc')); render(); }
-    catch { const el = document.querySelector('#freshness'); if (el) el.textContent = '连接失败 · 保留上次快照'; }
+    catch { window.dispatchEvent(new Event('pc-connection-failed')); }
     finally { refreshing = false; }
   };
   document.querySelector('#login').addEventListener('submit', async event => {
